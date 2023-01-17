@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 
 import dbt.flags as flags
-from dbt.exceptions import RuntimeException
+from dbt.exceptions import DbtRuntimeError
 from agate import Row
 from pyhive import hive
 from dbt.adapters.spark import SparkAdapter, SparkRelation
@@ -456,7 +456,7 @@ class TestSparkAdapter(unittest.TestCase):
         adapter = SparkAdapter(config)
         # fine
         adapter.Relation.create(schema='different', identifier='table')
-        with self.assertRaises(RuntimeException):
+        with self.assertRaises(DbtRuntimeError):
             # not fine - database set
             adapter.Relation.create(
                 database='something', schema='different', identifier='table')
@@ -479,7 +479,7 @@ class TestSparkAdapter(unittest.TestCase):
             },
             'target': 'test'
         }
-        with self.assertRaises(RuntimeException):
+        with self.assertRaises(DbtRuntimeError):
             config_from_parts_or_dicts(self.project_cfg, profile)
 
     def test_profile_with_cluster_and_sql_endpoint(self):
@@ -499,7 +499,7 @@ class TestSparkAdapter(unittest.TestCase):
             },
             'target': 'test'
         }
-        with self.assertRaises(RuntimeException):
+        with self.assertRaises(DbtRuntimeError):
             config_from_parts_or_dicts(self.project_cfg, profile)
 
     def test_parse_columns_from_information_with_table_type_and_delta_provider(self):
